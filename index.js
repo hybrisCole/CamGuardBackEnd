@@ -11,7 +11,7 @@ const publish = require('./socket');
 
 app.use(logger());
 app.use(serve(__dirname, {
-  maxage : 50 * 1000,
+  maxage : 0,
 }));
 
 app.use(route.post('/image', function *image() {
@@ -21,7 +21,7 @@ app.use(route.post('/image', function *image() {
   const parts = parse(this);
   let part;
   while (part = yield parts) {
-    const imageName = new Date().getTime();
+    const imageName = 'image';
     publish('camguard:newimage', imageName);
     part.pipe(fs.createWriteStream(`${imageName}.jpg`));
   }

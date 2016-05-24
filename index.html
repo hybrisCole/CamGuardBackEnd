@@ -8,23 +8,28 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="http://cdn.pubnub.com/pubnub-3.14.5.min.js"></script>
         <style type="text/css">
-         #camGuardImage {
-          transform: rotate(90deg);
+         #imageCanvas {
+          margin: 0 auto;
          }
        </style>
     </head>
     <body>
-      <img id="camGuardImage" width="50%">
+      <canvas id="imageCanvas" width='800' height='600'></canvas>
       <script>
         (function() {
+          var ctx = document.getElementById('imageCanvas').getContext('2d');
           const pubnub = PUBNUB({
               subscribe_key : 'sub-c-b507301c-216b-11e6-8b91-02ee2ddab7fe',
           });
-
           pubnub.subscribe({
-            channel : 'camguard:newimage',
-            message : function (image) {
-              document.getElementById('camGuardImage').src = `http://localhost:1985/${image}.jpg`;
+            channel : 'camguard:newimage',
+            message : function (image) {
+              var img = new Image();
+              img.onload = function(){
+                ctx.clearRect(0, 0, 800, 600);
+                ctx.drawImage(img,0,0, 800, 600);
+              };
+              img.src = `http://localhost:1985/${image}.jpg?date=${new Date().getTime()}`;
             },
           });
         })();
