@@ -1,0 +1,33 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="http://cdn.pubnub.com/pubnub-3.14.5.min.js"></script>
+        <style type="text/css">
+         #camGuardImage {
+          transform: rotate(90deg);
+         }
+       </style>
+    </head>
+    <body>
+      <img id="camGuardImage" width="50%">
+      <script>
+        (function() {
+          const pubnub = PUBNUB({
+              subscribe_key : 'sub-c-b507301c-216b-11e6-8b91-02ee2ddab7fe',
+          });
+
+          pubnub.subscribe({
+            channel : 'camguard:newimage',
+            message : function (image) {
+              document.getElementById('camGuardImage').src = `http://localhost:1985/${image}.jpg`;
+            },
+          });
+        })();
+      </script>
+    </body>
+</html>
