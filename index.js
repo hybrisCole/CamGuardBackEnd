@@ -6,8 +6,8 @@ const serve = require('koa-static');
 const fs = require('fs');
 const app = koa();
 const PORT = 1985;
-
 const publish = require('./socket');
+let imageName = 'image';
 
 app.use(logger());
 app.use(serve(__dirname, {
@@ -21,9 +21,11 @@ app.use(route.post('/image', function *image() {
   const parts = parse(this);
   let part;
   while (part = yield parts) {
-    const imageName = 'image';
-    publish('camguard:newimage', imageName);
-    part.pipe(fs.createWriteStream(`${imageName}.jpg`));
+    const stream = part.pipe(fs.createWriteStream(`${imageName}.jpg`));
+    stream.on('finish', () => {
+      console.log('sending');
+      publish('camguard:newimage', imageName);
+    });
   }
   this.type = 'json';
   this.body = {
