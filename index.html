@@ -26,8 +26,10 @@
             message : function (image) {
               var img = new Image();
               img.onload = function(){
-                ctx.clearRect(0, 0, 800, 600);
-                ctx.drawImage(img,0,0, 800, 600);
+                requestAnimationFrame(() => {
+                  ctx.clearRect(0, 0, 800, 600);
+                  ctx.drawImage(img,0,0, 800, 600);
+                });
               };
               img.src = `http://localhost:1985/${image}.jpg?date=${new Date().getTime()}`;
             },
