@@ -7,11 +7,19 @@ const pubnubRef = pubnub.init({
   },
 });
 
-module.exports =  function publish (channel, message, cb, err) {
-  pubnubRef.publish({
-    channel  : channel,
-    message  : message,
-    callback : cb,
-    error    : err,
-  });
-}
+module.exports =  {
+  publish : function publish (channel, message, cb, err) {
+    pubnubRef.publish({
+      channel  : channel,
+      message  : message,
+      callback : cb,
+      error    : err,
+    });
+  },
+  subscribe : function subscribe (channel, message) {
+    pubnubRef.subscribe({
+      channel : channel,
+      message : message,
+    });
+  },
+};
