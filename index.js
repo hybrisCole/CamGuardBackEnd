@@ -37,7 +37,7 @@ app.use(route.post('/image', function *image() {
   }
 }));
 
-socketRef.subscribe('camguard:requestimage', (message) =>{
+const sendImage = (message) => {
   const nextImage = imageArray[0];
   if (message.previousImage !== 'NO_IMAGE') {
     setTimeout(function () {
@@ -48,13 +48,21 @@ socketRef.subscribe('camguard:requestimage', (message) =>{
           console.log('todo bien');
         }
       });
-    }, 1500);
+    }, 30000);
   }
-  console.log(`next image should be ${nextImage}`);
-  socketRef.publish('camguard:newimage', nextImage || 'borraja');
-  imageArray = _.drop(imageArray);
-  console.log(`${imageArray.length} images to send`);
-});
+  if (nextImage) {
+    console.log(`next image should be ${nextImage}`);
+    socketRef.publish('camguard:newimage', nextImage);
+    imageArray = _.drop(imageArray);
+    console.log(`${imageArray.length} images to send`);
+  } else {
+    console.log(`no images to show, waiting 1sec for cel phone...`);
+    setTimeout(() => {sendImage({previousImage : 'NO_IMAGE'})}, 1000);
+  }
+
+}
+
+socketRef.subscribe('camguard:requestimage', sendImage);
 
 console.log(`Listening at ${PORT}`);
 app.listen(PORT);

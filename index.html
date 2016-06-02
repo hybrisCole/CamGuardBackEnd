@@ -44,12 +44,16 @@
                   requestImage(image);
                 });
               };
-              img.src = `http://localhost:1985/${image}.jpg?date=${new Date().getTime()}`;
+              try{
+                img.src = `http://localhost:1985/${image}.jpg?date=${new Date().getTime()}`;
+              } catch(err) {
+                console.log(err);
+              }
             },
           });
           setTimeout(()=> {
             requestImage();
-          }, 500);
+          }, 1500);
         })();
       </script>
     </body>
